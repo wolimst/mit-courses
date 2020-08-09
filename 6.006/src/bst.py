@@ -8,6 +8,10 @@ class BST:
     def insert(self, node: BSTNode) -> BST:
         """
         Insert the node into tree.
+
+        Complexity: O(h)
+                    where h is the height of the tree.
+                    h = lg(n) when the tree is balanced.
         """
         if self.root is None:
             self.root = node
@@ -24,6 +28,11 @@ class BST:
         return self.insert(node)
 
     def find_key(self, key) -> BSTNode:
+        """
+        Find a node with the key.
+
+        Complexity: O(h)
+        """
         return self.root.find_key(key)
 
     def find_min(self) -> BSTNode:
@@ -31,6 +40,19 @@ class BST:
 
     def find_max(self) -> BSTNode:
         return self.root.find_max()
+
+    def delete_key(self, key) -> BST:
+        """
+        Find and delete a node with the key.
+
+        Complexity: O(h)
+        """
+        node = self.find_key(key)
+        if self.root == node:
+            node.delete(bst=self)
+        else:
+            node.delete()
+        return self
 
 
 class BSTNode:
@@ -47,7 +69,7 @@ class BSTNode:
 
     def insert(self, node: BSTNode) -> None:
         """
-        Insert a node into subtree whose root is self.
+        Insert the node into subtree whose root is self.
         """
         if self > node:
             if self.left is None:
@@ -93,8 +115,10 @@ class BSTNode:
     def get_successor(self) -> BSTNode:
         """
         Find a node with next larger key.
+
+        Complexity: O(h)
         """
-        if self.right is None:  # Go up until parent is on the right
+        if self.right is None:  # Go up until the parent is on the right
             parent = self.parent
             child = self
             while parent is not None:
@@ -111,8 +135,10 @@ class BSTNode:
     def get_predecessor(self) -> BSTNode:
         """
         Find a node with next smaller key.
+
+        Complexity: O(h)
         """
-        if self.left is None:  # Go up until parent is on the left
+        if self.left is None:  # Go up until the parent is on the left
             parent = self.parent
             child = self
             while parent is not None:
@@ -126,17 +152,32 @@ class BSTNode:
 
         return self.left.find_max()
 
+    def delete(self, bst: BST = None) -> None:
+        # The node has no child
+        if self.left is None and self.right is None:
+            self.__update_parent_child_link(child_node=None, bst=bst)
 
-if __name__ == "__main__":
-    num_node = 10
-    random_nums = [68, 64, 151, 110, 19, 77, 144, 127, 45, 62]
-    sorted_random_nums = sorted(random_nums)
-    target = sorted_random_nums[num_node // 2]
-    predecessor_key = sorted_random_nums[num_node // 2 - 1]
+        # The node has one child
+        elif self.left is None:
+            self.__update_parent_child_link(child_node=self.right, bst=bst)
+        elif self.right is None:
+            self.__update_parent_child_link(child_node=self.left, bst=bst)
 
-    bst = BST()
-    for item in random_nums:
-        bst.insert_key(item)
+        # The node has two child
+        else:
+            successor = self.get_successor()
+            self.key = successor.key
+            successor.delete()
 
-    predecessor = bst.find_key(target).get_predecessor()
-    print(predecessor_key, predecessor.key)
+    def __update_parent_child_link(
+        self, child_node=None, bst: BST = None
+    ) -> None:
+        if self.parent is None:
+            bst.root = child_node
+        elif self == self.parent.left:
+            self.parent.left = child_node
+        else:
+            self.parent.right = child_node
+
+        if child_node:
+            child_node.parent = self.parent
