@@ -141,7 +141,7 @@ class TestAVL:
         assert maximum == max_node.key
 
     def test_get_successor(self):
-        num_node = 50
+        num_node = 100
         random_nums = self.build_unique_random_number_list(num_node, 0, 200)
 
         sorted_random_nums = sorted(random_nums)
@@ -153,7 +153,7 @@ class TestAVL:
         assert sucessor_key == sucessor.key
 
     def test_get_predecessor(self):
-        num_node = 50
+        num_node = 100
         random_nums = self.build_unique_random_number_list(num_node, 0, 200)
 
         sorted_random_nums = sorted(random_nums)
@@ -164,60 +164,99 @@ class TestAVL:
         predecessor = bst.find_key(target).get_predecessor()
         assert predecessor_key == predecessor.key
 
-    # def test_delete_random(self):
-    #     num_node = 50
-    #     random_nums = self.build_unique_random_number_list(num_node, 0, 200)
-    #     bst = self.create_bst_with_key_list(random_nums)
-    #     key = random_nums[num_node // 2]
-    #     bst.delete_key(key)
-    #     with pytest.raises(ValueError):
-    #         bst.find_key(key)
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_random(self):
+        num_node = 100
+        random_nums = self.build_unique_random_number_list(num_node, 0, 200)
+        bst = self.create_bst_with_key_list(random_nums)
+        key = random_nums[num_node // 2]
+        bst.delete_key(key)
+        with pytest.raises(ValueError):
+            bst.find_key(key)
+        assert self.check_representation_invarient(bst.root)
 
-    # def test_delete_node_with_no_child(self):
-    #     bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
-    #     key = 2
-    #     bst.delete_key(key)
-    #     with pytest.raises(ValueError):
-    #         bst.find_key(key)
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_node_with_no_child(self):
+        bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
+        key = 2
+        bst.delete_key(key)
+        with pytest.raises(ValueError):
+            bst.find_key(key)
+        assert self.check_representation_invarient(bst.root)
+        assert bst.root.key == 10
+        assert bst.root.left.key == 5
+        assert bst.root.left.right.key == 7
+        assert bst.root.right.key == 15
 
-    # def test_delete_node_with_one_child(self):
-    #     bst = self.create_bst_with_key_list([10, 5, 2, 7, 15, 12])
-    #     key = 15
-    #     bst.delete_key(key)
-    #     with pytest.raises(ValueError):
-    #         bst.find_key(key)
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_node_with_one_child(self):
+        bst = self.create_bst_with_key_list([10, 5, 2, 7, 15, 12])
+        key = 15
+        bst.delete_key(key)
+        with pytest.raises(ValueError):
+            bst.find_key(key)
+        assert self.check_representation_invarient(bst.root)
+        assert bst.root.key == 10
+        assert bst.root.right.key == 12
 
-    # def test_delete_node_with_two_child(self):
-    #     bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
-    #     key = 5
-    #     bst.delete_key(key)
-    #     with pytest.raises(ValueError):
-    #         bst.find_key(key)
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_node_with_two_child(self):
+        bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
+        # Node with key 10 has two child because of the tree rebalancing
+        # during inserts.
+        key = 10
+        bst.delete_key(key)
+        with pytest.raises(ValueError):
+            bst.find_key(key)
+        assert self.check_representation_invarient(bst.root)
 
-    # def test_delete_root_with_no_child(self):
-    #     bst = self.create_bst_with_key_list([10])
-    #     bst.delete_key(bst.root.key)
-    #     assert bst.root is None
+    def test_delete_root_with_no_child(self):
+        bst = self.create_bst_with_key_list([10])
+        bst.delete_key(bst.root.key)
+        assert bst.root is None
 
-    # def test_delete_root_with_one_child(self):
-    #     bst = self.create_bst_with_key_list([1, 6, 4, 2, 3, 5, 9, 7, 8, 10])
-    #     assert bst.root.left is None
-    #     bst.delete_key(bst.root.key)
-    #     assert bst.root.key == 6
-    #     assert bst.root.parent is None
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_root_with_one_child(self):
+        bst = self.create_bst_with_key_list([5, 10])
+        assert bst.root.left is None
+        bst.delete_key(bst.root.key)
+        assert bst.root.key == 10
+        assert bst.root.parent is None
+        assert bst.root.left is bst.root.right is None
+        assert self.check_representation_invarient(bst.root)
 
-    # def test_delete_root_with_two_child(self):
-    #     bst = self.create_bst_with_key_list([1, 0, 6, 4, 2, 3, 5, 9, 7, 8])
-    #     bst.delete_key(bst.root.key)
-    #     assert bst.root.key == 2
-    #     assert bst.root.parent is None
-    #     assert bst.root.left.key == 0
-    #     assert bst.root.right.key == 6
-    #     assert bst.root.get_successor().key == 3
-    #     assert bst.root.get_predecessor().key == 0
-    #     assert self.check_representation_invarient(bst.root)
+    def test_delete_root_with_two_child(self):
+        bst = self.create_bst_with_key_list([10, 5, 15, 2, 7, 12, 17, 14])
+        bst.delete_key(bst.root.key)
+        assert bst.root.key == 12
+        assert bst.root.parent is None
+        assert bst.root.left.key == 5
+        assert bst.root.right.key == 15
+        assert bst.root.get_successor().key == 14
+        assert bst.root.get_predecessor().key == 7
+        assert self.check_representation_invarient(bst.root)
+
+    def test_delete_with_one_rebalance(self):
+        bst = self.create_bst_with_key_list([44, 17, 78, 32, 50, 88, 48, 62])
+        bst.delete_key(32)
+        assert self.check_representation_invarient(bst.root)
+        assert bst.root.key == 50
+        assert bst.root.left.key == 44
+        assert bst.root.left.left.key == 17
+        assert bst.root.left.right.key == 48
+        assert bst.root.right.key == 78
+        assert bst.root.right.left.key == 62
+        assert bst.root.right.right.key == 88
+
+    def test_delete_with_two_rebalances(self):
+        keys = [50, 25, 75, 10, 30, 60, 80, 5, 15, 27, 55, 1]
+        bst = self.create_bst_with_key_list(keys)
+        bst.delete_key(80)
+        assert self.check_representation_invarient(bst.root)
+        assert bst.root.parent is None
+        assert bst.root.key == 25
+        assert bst.root.left.key == 10
+        assert bst.root.left.left.key == 5
+        assert bst.root.left.right.key == 15
+        assert bst.root.left.left.left.key == 1
+        assert bst.root.right.key == 50
+        assert bst.root.right.left.key == 30
+        assert bst.root.right.left.left.key == 27
+        assert bst.root.right.right.key == 60
+        assert bst.root.right.right.left.key == 55
+        assert bst.root.right.right.right.key == 75
