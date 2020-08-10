@@ -64,7 +64,7 @@ class TestBST:
         assert bst.root.key == 10
         assert bst.root.left.key == 5
         assert bst.root.right.key == 20
-        assert bst.root.left.parent == bst.root.right.parent == bst.root
+        assert bst.root.left.parent is bst.root.right.parent is bst.root
         assert self.check_representation_invarient(bst.root)
 
     def test_insert_right_heavy(self):
@@ -72,16 +72,16 @@ class TestBST:
         assert bst.root.key == 10
         assert bst.root.right.key == 20
         assert bst.root.right.right.key == 30
-        assert bst.root.right.right.parent == bst.root.right
-        assert bst.root.right.parent == bst.root
+        assert bst.root.right.right.parent is bst.root.right
+        assert bst.root.right.parent is bst.root
         assert self.check_representation_invarient(bst.root)
 
     def test_insert_zigzag(self):
         bst = self.create_bst_with_key_list([10, 30, 20])
         assert bst.root.right.key == 30
         assert bst.root.right.left.key == 20
-        assert bst.root.right.left.parent == bst.root.right
-        assert bst.root.right.parent == bst.root
+        assert bst.root.right.left.parent is bst.root.right
+        assert bst.root.right.parent is bst.root
         assert self.check_representation_invarient(bst.root)
 
     def test_insert_duplicated_key(self):
@@ -93,7 +93,7 @@ class TestBST:
         node = BSTNode(20)
         bst.insert_key(10).insert_key(30).insert(node)
         node_found = bst.find_key(node.key)
-        assert node_found == node
+        assert node_found is node
 
     def test_find_min(self):
         random_nums = self.build_unique_random_number_list(50, 0, 200)

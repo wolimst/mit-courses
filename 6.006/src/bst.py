@@ -48,7 +48,7 @@ class BST:
         Complexity: O(h)
         """
         node = self.find_key(key)
-        if self.root == node:
+        if self.root is node:
             node.delete(bst=self)
         else:
             node.delete()
@@ -174,7 +174,7 @@ class BSTNode:
     ) -> None:
         if self.parent is None:
             bst.root = child_node
-        elif self == self.parent.left:
+        elif self is self.parent.left:
             self.parent.left = child_node
         else:
             self.parent.right = child_node
