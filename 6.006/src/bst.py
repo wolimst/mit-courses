@@ -49,7 +49,7 @@ class BST:
         """
         node = self.find_key(key)
         if self.root is node:
-            node.delete(bst=self)
+            node.delete(tree=self)
         else:
             node.delete()
         return self
@@ -152,28 +152,34 @@ class BSTNode:
 
         return self.left.find_max()
 
-    def delete(self, bst: BST = None) -> None:
+    def delete(self, tree: BST = None) -> BSTNode:
+        """
+        Delete the node and returns its parent.
+        """
         # The node has no child
         if self.left is None and self.right is None:
-            self.__update_parent_child_link(child_node=None, bst=bst)
+            self.__update_parent_child_link(child_node=None, tree=tree)
 
         # The node has one child
         elif self.left is None:
-            self.__update_parent_child_link(child_node=self.right, bst=bst)
+            self.__update_parent_child_link(child_node=self.right, tree=tree)
         elif self.right is None:
-            self.__update_parent_child_link(child_node=self.left, bst=bst)
+            self.__update_parent_child_link(child_node=self.left, tree=tree)
 
         # The node has two child
         else:
             successor = self.get_successor()
             self.key = successor.key
-            successor.delete()
+            successor.delete(tree=tree)
+            return successor.parent
+
+        return self.parent
 
     def __update_parent_child_link(
-        self, child_node=None, bst: BST = None
+        self, child_node=None, tree: BST = None
     ) -> None:
         if self.parent is None:
-            bst.root = child_node
+            tree.root = child_node
         elif self is self.parent.left:
             self.parent.left = child_node
         else:
