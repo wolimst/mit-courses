@@ -7,6 +7,10 @@ class AVL(BST):
         super().__init__()
 
     def insert(self, node: AVLNode) -> AVL:
+        """Insert a node into AVL tree.
+
+        Complexity: O(lg n)
+        """
         if self.root is None:
             self.root = node
         else:
@@ -18,6 +22,10 @@ class AVL(BST):
         return self.insert(node)
 
     def delete_key(self, key) -> AVL:
+        """Find and delete a node with key in the AVL tree.
+
+        Complexity: O(lg n)
+        """
         node = self.find_key(key)
         node.delete(tree=self)
 
@@ -47,6 +55,11 @@ class AVLNode(BSTNode):
         return right_height - left_height
 
     def rebalance(self, tree: AVLNode = None):
+        """Rebalance the node when the height of children differ by 2.
+        Update the tree root when the root is being rotated.
+
+        Complexity: O(1)
+        """
         self.update_height()
         if self.get_height_balance() == 2:  # self is right heavy
             # self.right is left heavy
@@ -103,6 +116,8 @@ class AVLNode(BSTNode):
         pivot.update_height()
 
     def insert(self, node: AVLNode, tree: AVL) -> None:
+        """Insert the node into the tree and rebalance the tree.
+        """
         if node.left or node.right:
             raise NotImplementedError(
                 "Cannot insert another tree into the tree"
@@ -131,6 +146,8 @@ class AVLNode(BSTNode):
         self.rebalance(tree=tree)
 
     def delete(self, tree: AVL = None):
+        """Delete the node and rebalance up to root.
+        """
         parent = super().delete(tree=tree)
         node = parent
         while node:
