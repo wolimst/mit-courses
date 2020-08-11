@@ -57,6 +57,11 @@ class TestAVL:
             node.right, node.key, max_key
         )
 
+        left_height = node.left.height if node.left else -1
+        right_height = node.right.height if node.right else -1
+        if node.height != max(left_height, right_height) + 1:
+            return False
+
         if abs(node.get_height_balance()) > 1:
             return False
 
