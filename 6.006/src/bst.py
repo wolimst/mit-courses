@@ -94,12 +94,12 @@ class BSTNode:
 
         elif key < self.key:
             if self.left is None:
-                raise ValueError("Key not found in BST")
+                raise KeyError("Key not found in BST")
             return self.left.find_key(key)
 
         else:
             if self.right is None:
-                raise ValueError("Key not found in BST")
+                raise KeyError("Key not found in BST")
             return self.right.find_key(key)
 
     def find_min(self) -> BSTNode:

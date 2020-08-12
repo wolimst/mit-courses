@@ -141,7 +141,7 @@ class TestBST:
         bst = self.create_bst_with_key_list(random_nums)
         key = random_nums[num_node // 2]
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 
@@ -149,7 +149,7 @@ class TestBST:
         bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
         key = 2
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 
@@ -157,7 +157,7 @@ class TestBST:
         bst = self.create_bst_with_key_list([10, 5, 2, 7, 15, 12])
         key = 15
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 
@@ -165,7 +165,7 @@ class TestBST:
         bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
         key = 5
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 

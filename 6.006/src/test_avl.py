@@ -175,7 +175,7 @@ class TestAVL:
         bst = self.create_bst_with_key_list(random_nums)
         key = random_nums[num_node // 2]
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 
@@ -183,7 +183,7 @@ class TestAVL:
         bst = self.create_bst_with_key_list([10, 5, 2, 7, 15])
         key = 2
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
         assert bst.root.key == 10
@@ -195,7 +195,7 @@ class TestAVL:
         bst = self.create_bst_with_key_list([10, 5, 2, 7, 15, 12])
         key = 15
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
         assert bst.root.key == 10
@@ -207,7 +207,7 @@ class TestAVL:
         # during inserts.
         key = 10
         bst.delete_key(key)
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             bst.find_key(key)
         assert self.check_representation_invarient(bst.root)
 
