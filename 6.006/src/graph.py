@@ -4,7 +4,7 @@ import sys
 import math
 
 
-def breadth_first_search(graph, source: Vertex) -> Dict[Vertex, Vertex]:
+def breadth_first_search(graph: Graph, source: Vertex) -> Dict[Vertex, Vertex]:
     """Breadth-first search. Ignore weights.
     Return parent dictionary, i.e. {vertex: parent vertex}.
 
@@ -22,7 +22,7 @@ def breadth_first_search(graph, source: Vertex) -> Dict[Vertex, Vertex]:
     return parent
 
 
-def depth_first_search(graph, source: Vertex) -> List[Vertex]:
+def depth_first_search(graph: Graph, source: Vertex) -> List[Vertex]:
     """Depth-first search. Ignore weights.
     Return visited vertices ordered by dead-end reached time.
 
@@ -47,13 +47,15 @@ def depth_first_search(graph, source: Vertex) -> List[Vertex]:
 def dijkstra(
     graph, source: Vertex
 ) -> Tuple[Dict[Vertex, Union[int, float], Dict[Vertex, Vertex]]]:
-    """Dijkstra's shortest path algorithm.
-    Complexity can be improved by using a binary min-heap or Fibonacci heap
-    which can extract minimum efficiently.
+    """Dijkstra's shortest path algorithm. All edges in the graph should have
+    non-negative weight. Complexity can be improved by using a binary min-heap
+    or Fibonacci heap which can perform 'extract-min' and 'decrease-key'
+    efficiently.
 
     Return (distance, parent)
-           distance dictionary, i.e. {vertex: distance from source}
-           parent dictionary, i.e. {vertex: parent vertex}
+           where `distance` and `parent` are dictionaries,
+           i.e. distance = {v: distance from the source} for v ∈ V,
+                parent = {v: parent vertex} for reachable v ∈ V from source.
 
     Complexity: O(|V|^2 + |E|)
     """
@@ -78,6 +80,44 @@ def dijkstra(
                 distance[neighbor] = new_distance
                 vertices_to_visit[neighbor] = new_distance
                 parent[neighbor] = frontier
+
+    return (distance, parent)
+
+
+def bellman_ford(
+    graph: Graph, source: Vertex
+) -> Tuple[Dict[Vertex, Union[int, float], Dict[Vertex, Vertex]]]:
+    """Bellman-Ford algorithm. Shortest path in a graph with negative weight
+    edges can be calculated when there is no negative cycle.
+    
+    Return (distance, parent)
+           where `distance` and `parent` are dictionaries,
+           i.e. distance = {v: distance from the source} for v ∈ V,
+                parent = {v: parent vertex} for reachable v ∈ V from source.
+    
+    Raise RuntimeError
+          when there are negative cycles reachable from the source.
+
+    Complexity: O(|V|⋅|E|)
+    """
+    edges = graph.get_edges()
+    parent = {source: None}
+    distance = dict.fromkeys(graph.get_vertices(), math.inf)
+    distance[source] = 0
+    for i in range(len(graph.get_vertices()) - 1):
+        for edge in edges:
+            u, v = edge.get_source(), edge.get_dest()
+            new_dist_to_v = distance[u] + edge.get_weight()
+            if distance[v] > new_dist_to_v:
+                parent[v] = u
+                distance[v] = new_dist_to_v
+
+    for edge in edges:
+        u, v = edge.get_source(), edge.get_dest()
+        if distance[v] > distance[u] + edge.get_weight():
+            raise RuntimeError(
+                "Graph has negative cycle(s) reachable from source."
+            )
 
     return (distance, parent)
 
