@@ -89,12 +89,12 @@ def bellman_ford(
 ) -> Tuple[Dict[Vertex, Union[int, float], Dict[Vertex, Vertex]]]:
     """Bellman-Ford algorithm. Shortest path in a graph with negative weight
     edges can be calculated when there is no negative cycle.
-    
+ 
     Return (distance, parent)
            where `distance` and `parent` are dictionaries,
            i.e. distance = {v: distance from the source} for v ∈ V,
                 parent = {v: parent vertex} for reachable v ∈ V from source.
-    
+
     Raise RuntimeError
           when there are negative cycles reachable from the source.
 
